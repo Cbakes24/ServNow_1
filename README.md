@@ -1,50 +1,150 @@
-# Welcome to your Expo app 👋
+# 🗭 ServNow Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application built with **Expo Router** for service booking and contractor management.
 
-## Get started
+## 🏗️ Project Structure
 
-1. Install dependencies
+```
+app/                    # Screens and navigation routes
+├── (tabs)/            # Customer bottom tab layout
+│   ├── _layout.tsx    # Customer tab navigation
+│   ├── index.tsx      # Customer home screen
+│   ├── explore.tsx    # Services browsing screen
+│   └── profile.tsx    # Customer profile screen
+├── (contractor)/      # Contractor-specific flow
+│   ├── _layout.tsx    # Contractor tab navigation
+│   ├── index.tsx      # Contractor home dashboard
+│   └── jobs.tsx       # Assigned jobs management
+├── auth/              # Authentication screens
+│   ├── _layout.tsx    # Auth navigation
+│   ├── login.tsx      # Login screen
+│   └── signup.tsx     # Signup screen
+├── _layout.tsx        # Global navigation wrapper
+└── +not-found.tsx     # 404 screen
 
+components/            # Shared UI components
+├── ui/                # UI components
+├── Collapsible.tsx    # Collapsible component
+├── ExternalLink.tsx   # External link component
+├── HapticTab.tsx      # Haptic feedback tab
+├── HelloWave.tsx      # Animated wave component
+├── ParallaxScrollView.tsx # Parallax scroll view
+├── ThemedText.tsx     # Themed text component
+└── ThemedView.tsx     # Themed view component
+
+constants/             # Reusable values
+└── Colors.ts          # Color definitions
+
+hooks/                 # Custom hooks
+├── useColorScheme.ts  # Color scheme hook
+├── useColorScheme.web.ts # Web color scheme hook
+└── useThemeColor.ts   # Theme color hook
+
+assets/                # Images, fonts, icons
+```
+
+## 🚀 Features
+
+### Customer Features
+- **Home Dashboard**: Quick actions and service overview
+- **Services Browser**: Browse and book professional services
+- **Profile Management**: Account settings and preferences
+- **Authentication**: Secure login and signup
+
+### Contractor Features
+- **Dashboard**: Job statistics and daily schedule
+- **Job Management**: View and manage assigned jobs
+- **Status Tracking**: Track job progress and completion
+
+### Technical Features
+- **Expo Router**: File-based routing (like Next.js)
+- **TypeScript**: Full type safety
+- **Modern UI**: Clean, responsive design
+- **Dark Mode**: Light and dark theme support
+- **Haptic Feedback**: Enhanced user experience
+
+## 🛠️ Getting Started
+
+### Prerequisites
+- Node.js (v18 or later)
+- Expo CLI
+- iOS Simulator or Android Emulator
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd servnow-mobile
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Start the development server**
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
+4. **Run on device/simulator**
+   - Press `i` for iOS simulator
+   - Press `a` for Android emulator
+   - Scan QR code with Expo Go app
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📱 Navigation Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Customer Flow
+- **Home** (`/`): Main dashboard with quick actions
+- **Services** (`/services`): Browse available services
+- **Profile** (`/profile`): Account and settings
 
-## Get a fresh project
+### Contractor Flow
+- **Dashboard** (`/contractor`): Job overview and stats
+- **Jobs** (`/contractor/jobs`): Manage assigned jobs
 
-When you're ready, run:
+### Authentication
+- **Login** (`/auth/login`): Sign in to account
+- **Signup** (`/auth/signup`): Create new account
 
-```bash
-npm run reset-project
-```
+## 🎨 Design System
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+The app uses a consistent design system with:
+- **Colors**: Defined in `constants/Colors.ts`
+- **Typography**: Consistent font sizes and weights
+- **Spacing**: Standardized padding and margins
+- **Components**: Reusable UI components
 
-## Learn more
+## 🔧 Development
 
-To learn more about developing your project with Expo, look at the following resources:
+### Adding New Screens
+1. Create a new file in the appropriate directory under `app/`
+2. Export a default React component
+3. The route will be automatically available based on the file path
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Adding New Components
+1. Create components in the `components/` directory
+2. Use TypeScript for type safety
+3. Follow the existing component patterns
 
-## Join the community
+### Styling
+- Use StyleSheet for component-specific styles
+- Follow the existing color scheme
+- Maintain consistency with the design system
 
-Join our community of developers creating universal apps.
+## 📄 License
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+---
+
+**Built with ❤️ using Expo Router**
