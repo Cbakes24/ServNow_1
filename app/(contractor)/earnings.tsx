@@ -1,15 +1,16 @@
 // EarningsScreen.tsx (or .jsx)
 import React, { useMemo, useState } from "react";
 import {
-  Alert,
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    FlatList,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // ---- Mock data you'd replace with API results ----
 const JOBS = [
@@ -73,84 +74,86 @@ export default function EarningsScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      {/* Top cards */}
-      <View style={styles.cardsRow}>
-        <StatCard label="Available" value={money(available)} accent />
-        <StatCard label="Pending" value={money(pending)} />
-        <StatCard label="Lifetime" value={money(lifetime)} />
-      </View>
-
-      {/* Cash out */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Cash Out</Text>
-
-        <View style={styles.methodRow}>
-          <MethodCard
-            title="Standard"
-            subtitle="1–3 business days"
-            price="Free"
-            selected={method === "standard"}
-            onPress={() => setMethod("standard")}
-          />
-          <MethodCard
-            title="Instant"
-            subtitle="Arrives now"
-            price="2% fee"
-            selected={method === "instant"}
-            onPress={() => setMethod("instant")}
-          />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Top cards */}
+        <View style={styles.cardsRow}>
+          <StatCard label="Available" value={money(available)} accent />
+          <StatCard label="Pending" value={money(pending)} />
+          <StatCard label="Lifetime" value={money(lifetime)} />
         </View>
 
-        <View style={styles.amountRow}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.inputLabel}>Amount</Text>
-            <View style={styles.inputWrap}>
-              <Text style={styles.dollar}>$</Text>
-              <TextInput
-                keyboardType="decimal-pad"
-                value={amountText}
-                onChangeText={setAmountText}
-                placeholder="0.00"
-                style={styles.input}
-              />
-            </View>
+        {/* Cash out */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Cash Out</Text>
+
+          <View style={styles.methodRow}>
+            <MethodCard
+              title="Standard"
+              subtitle="1–3 business days"
+              price="Free"
+              selected={method === "standard"}
+              onPress={() => setMethod("standard")}
+            />
+            <MethodCard
+              title="Instant"
+              subtitle="Arrives now"
+              price="2% fee"
+              selected={method === "instant"}
+              onPress={() => setMethod("instant")}
+            />
           </View>
-          <TouchableOpacity onPress={handleMax} style={styles.maxBtn}>
-            <Text style={styles.maxBtnText}>MAX</Text>
+
+          <View style={styles.amountRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.inputLabel}>Amount</Text>
+              <View style={styles.inputWrap}>
+                <Text style={styles.dollar}>$</Text>
+                <TextInput
+                  keyboardType="decimal-pad"
+                  value={amountText}
+                  onChangeText={setAmountText}
+                  placeholder="0.00"
+                  style={styles.input}
+                />
+              </View>
+            </View>
+            <TouchableOpacity onPress={handleMax} style={styles.maxBtn}>
+              <Text style={styles.maxBtnText}>MAX</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.summaryRow}>
+            <Row label="Fee" value={`$${fee.toFixed(2)}`} />
+            <Row label="You receive" value={`$${payout.toFixed(2)}`} bold />
+          </View>
+
+          <TouchableOpacity
+            disabled={!canCashOut}
+            onPress={handleCashOut}
+            style={[styles.primaryBtn, !canCashOut && styles.btnDisabled]}
+          >
+            <Text style={styles.primaryBtnText}>
+              {method === "instant" ? "Cash Out Instantly" : "Cash Out (Free)"}
+            </Text>
           </TouchableOpacity>
-        </View>
 
-        <View style={styles.summaryRow}>
-          <Row label="Fee" value={`$${fee.toFixed(2)}`} />
-          <Row label="You receive" value={`$${payout.toFixed(2)}`} bold />
-        </View>
-
-        <TouchableOpacity
-          disabled={!canCashOut}
-          onPress={handleCashOut}
-          style={[styles.primaryBtn, !canCashOut && styles.btnDisabled]}
-        >
-          <Text style={styles.primaryBtnText}>
-            {method === "instant" ? "Cash Out Instantly" : "Cash Out (Free)"}
+          <Text style={styles.hintText}>
+            Minimum cash out is $10. Standard cash out typically arrives in 1–3 business days.
           </Text>
-        </TouchableOpacity>
+        </View>
 
-        <Text style={styles.hintText}>
-          Minimum cash out is $10. Standard cash out typically arrives in 1–3 business days.
-        </Text>
-      </View>
-
-      {/* Recent jobs */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Recent Jobs</Text>
-        <FlatList
-          data={JOBS}
-          keyExtractor={(i) => i.id}
-          renderItem={({ item }) => <JobRow job={item} />}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          scrollEnabled={false}
-        />
-      </View>
+        {/* Recent jobs */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Recent Jobs</Text>
+          <FlatList
+            data={JOBS}
+            keyExtractor={(i) => i.id}
+            renderItem={({ item }) => <JobRow job={item} />}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            scrollEnabled={false}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
