@@ -116,12 +116,12 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#B9FF66',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
-    color: 'white',
+    color: '#191A23',
     fontSize: 24,
     fontWeight: 'bold',
   },
@@ -129,10 +129,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 4,
+    color: '#123456',
   },
   email: {
     fontSize: 16,
-    color: '#666',
+    color: '#123456',
   },
   section: {
     backgroundColor: 'white',
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     padding: 16,
     paddingBottom: 8,
-    color: '#333',
+    color: '#123456',
   },
   menuItem: {
     flexDirection: 'row',
@@ -164,11 +165,11 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 16,
-    color: '#333',
+    color: '#123456',
   },
   menuArrow: {
     fontSize: 18,
-    color: '#999',
+    color: '#123456',
   },
   logoutButton: {
     backgroundColor: '#FF3B30',
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   navigationTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: '#123456',
     marginBottom: 10,
   },
   navigationButtons: {
@@ -207,13 +208,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   navButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#B9FF66',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   navButtonText: {
-    color: 'white',
+    color: '#191A23',
     fontSize: 14,
     fontWeight: '600',
   },

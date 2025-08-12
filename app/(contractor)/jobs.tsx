@@ -113,10 +113,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 4,
+    color: '#123456',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#123456',
   },
   listContainer: {
     padding: 20,
@@ -145,6 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     flex: 1,
+    color: '#123456',
   },
   priorityBadge: {
     paddingHorizontal: 8,
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
   },
   jobAddress: {
     fontSize: 14,
-    color: '#666',
+    color: '#123456',
     marginBottom: 12,
   },
   jobFooter: {
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
   jobTime: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#007AFF',
+    color: '#B9FF66',
   },
   statusBadge: {
     paddingHorizontal: 8,

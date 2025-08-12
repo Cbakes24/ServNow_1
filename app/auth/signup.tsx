@@ -147,10 +147,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
+    color: '#123456',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#123456',
     textAlign: 'center',
   },
   form: {
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 8,
-    color: '#333',
+    color: '#123456',
   },
   input: {
     borderWidth: 1,
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
   },
   dividerText: {
     marginHorizontal: 16,
-    color: '#666',
+    color: '#123456',
     fontSize: 14,
   },
   loginButton: {

@@ -52,10 +52,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
+    color: '#123456',
   },
   subtitle: {
     fontSize: 18,
-    color: '#666',
+    color: '#123456',
     marginBottom: 40,
     textAlign: 'center',
   },
@@ -78,10 +79,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
+    color: '#123456',
   },
   cardText: {
     fontSize: 14,
-    color: '#666',
+    color: '#123456',
     marginBottom: 4,
   },
   navigationCard: {
@@ -105,19 +107,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 12,
     textAlign: 'center',
+    color: '#123456',
   },
   navigationButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
   navButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#B9FF66',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   navButtonText: {
-    color: 'white',
+    color: '#191A23',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -80,10 +80,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
+    color: '#123456',
   },
   subtitle: {
     fontSize: 18,
-    color: '#666',
+    color: '#123456',
     marginBottom: 30,
     textAlign: 'center',
   },
@@ -111,11 +112,11 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#B9FF66',
   },
   statLabel: {
     fontSize: 14,
-    color: '#666',
+    color: '#123456',
     marginTop: 4,
   },
   card: {
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 15,
+    color: '#123456',
   },
   scheduleItem: {
     flexDirection: 'row',
@@ -146,12 +148,12 @@ const styles = StyleSheet.create({
   scheduleTime: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#0041C2',
     width: 80,
   },
   scheduleText: {
     fontSize: 14,
-    color: '#333',
+    color: '#123456',
     flex: 1,
   },
   navigationCard: {
@@ -173,19 +175,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 15,
     textAlign: 'center',
+    color: '#123456',
   },
   navigationButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
   navButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#B9FF66',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   navButtonText: {
-    color: 'white',
+    color: '#191A23',
     fontSize: 16,
     fontWeight: 'bold',
   },

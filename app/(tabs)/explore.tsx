@@ -119,10 +119,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 4,
+    color: '#123456',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#123456',
   },
   listContainer: {
     padding: 20,
@@ -157,10 +158,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 4,
+    color: '#123456',
   },
   serviceDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#123456',
   },
   serviceFooter: {
     flexDirection: 'row',
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
   servicePrice: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#007AFF',
+    color: '#B9FF66',
   },
   ratingContainer: {
     backgroundColor: '#f0f0f0',
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 12,
     fontWeight: '500',
+    color: '#123456',
   },
   navigationCard: {
     backgroundColor: 'white',
@@ -201,19 +204,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 15,
     textAlign: 'center',
+    color: '#123456',
   },
   navigationButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
   navButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#B9FF66',
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 10,
   },
   navButtonText: {
-    color: 'white',
+    color: '#191A23',
     fontSize: 16,
     fontWeight: '600',
   },

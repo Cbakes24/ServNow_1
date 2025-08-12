@@ -1,14 +1,14 @@
 // EarningsScreen.tsx (or .jsx)
 import React, { useMemo, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -211,7 +211,7 @@ function JobRow({ job }: { job: { title: string; date: string; amount: number; s
     <View style={styles.jobRow}>
       <View style={{ flex: 1 }}>
         <Text style={styles.jobTitle}>{job.title}</Text>
-        <Text style={styles.jobMeta}>{formatDate(job.date)}</Text>
+        <Text style={styles.jobDate}>{formatDate(job.date)}</Text>
       </View>
       <View style={styles.jobRight}>
         <Text style={styles.jobAmount}>{money(job.amount)}</Text>
@@ -263,15 +263,15 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
   },
-  statAccent: { backgroundColor: "#4F46E5" },
-  statLabel: { color: "#6B7280", fontSize: 12, marginBottom: 6 },
-  statLabelAccent: { color: "#E5E7EB" },
-  statValue: { fontSize: 22, fontWeight: "700", color: "#111827" },
-  statValueAccent: { color: "white" },
+  statAccent: { backgroundColor: "#B9FF66" },
+  statLabel: { color: "#123456", fontSize: 12, marginBottom: 6 },
+  statLabelAccent: { color: "#123456", fontSize: 12, marginBottom: 6 },
+  statValue: { fontSize: 22, fontWeight: "700", color: "#123456" },
+  statValueAccent: { fontSize: 22, fontWeight: "700", color: "#123456" },
 
   // sections
   section: { marginTop: 18, paddingHorizontal: R.pad },
-  sectionTitle: { fontSize: 18, fontWeight: "700", color: "#111827", marginBottom: 10 },
+  sectionTitle: { fontSize: 18, fontWeight: "700", color: "#123456", marginBottom: 10 },
 
   // method
   methodRow: { flexDirection: "row", gap: R.gap },
@@ -283,14 +283,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E5E7EB",
   },
-  methodSelected: { borderColor: "#4F46E5" },
-  methodTitle: { fontWeight: "700", fontSize: 16, color: "#111827" },
-  methodSubtitle: { color: "#6B7280", marginTop: 2 },
-  methodPrice: { fontWeight: "600", marginTop: 8, color: "#111827" },
+  methodSelected: { borderColor: "#1E40AF" },
+  methodTitle: { fontWeight: "700", fontSize: 16, color: "#1E40AF" },
+  methodSubtitle: { color: "1E40AF", marginTop: 2 },
+  methodPrice: { fontWeight: "600", marginTop: 8, color: "1E40AF" },
 
   // amount
   amountRow: { flexDirection: "row", alignItems: "flex-end", gap: R.gap, marginTop: 14 },
-  inputLabel: { color: "#374151", marginBottom: 6 },
+  inputLabel: { color: "#123456", marginBottom: 6 },
   inputWrap: {
     flexDirection: "row",
     alignItems: "center",
@@ -301,37 +301,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     height: 48,
   },
-  dollar: { fontSize: 18, color: "#6B7280", marginRight: 4 },
-  input: { flex: 1, fontSize: 18, color: "#111827", paddingVertical: 0 },
+  dollar: { fontSize: 18, color: "#123456", marginRight: 4 },
+  input: { flex: 1, fontSize: 18, color: "#123456", paddingVertical: 0 },
   maxBtn: {
     height: 48,
     paddingHorizontal: 16,
-    backgroundColor: "#EEF2FF",
+    backgroundColor: "#B9FF66",
     borderRadius: R.radius,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#C7D2FE",
+    borderColor: "#B9FF66",
   },
-  maxBtnText: { color: "#3730A3", fontWeight: "700" },
+  maxBtnText: { color: "#123456", fontWeight: "700" },
 
   summaryRow: { marginTop: 12, gap: 6 },
   row: { flexDirection: "row", justifyContent: "space-between" },
-  rowLabel: { color: "#6B7280" },
-  rowValue: { color: "#111827" },
+  rowLabel: { color: "#123456" },
+  rowValue: { color: "#123456" },
   bold: { fontWeight: "700" },
 
   primaryBtn: {
     marginTop: 14,
     height: 52,
-    backgroundColor: "#4F46E5",
+    backgroundColor: "#B9FF66",
     borderRadius: R.radius,
     alignItems: "center",
     justifyContent: "center",
   },
   btnDisabled: { backgroundColor: "#9CA3AF" },
-  primaryBtnText: { color: "white", fontSize: 16, fontWeight: "700" },
-  hintText: { marginTop: 8, color: "#6B7280", fontSize: 12 },
+  primaryBtnText: { color: "#123456", fontSize: 16, fontWeight: "700" },
+  hintText: { marginTop: 8, color: "#123456", fontSize: 12 },
 
   // jobs
   separator: { height: 12 },
@@ -345,19 +345,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
   },
-  jobTitle: { fontWeight: "600", color: "#111827" },
-  jobMeta: { color: "#6B7280", marginTop: 2, fontSize: 12 },
+  jobTitle: { fontWeight: "600", color: "#0041C2" },
+  jobDate: { color: "#123456", marginTop: 2, fontSize: 12 },
   jobRight: { alignItems: "flex-end" },
-  jobAmount: { fontWeight: "700", color: "#111827" },
+  jobAmount: { fontWeight: "700", color: "#123456" },
 
   badge: {
     marginTop: 6,
     paddingHorizontal: 8,
     paddingVertical: 4,
+    
     borderRadius: 999,
     backgroundColor: "#E5E7EB",
   },
   badgePaid: { backgroundColor: "#DCFCE7" },
   badgePending: { backgroundColor: "#FEF3C7" },
-  badgeText: { fontSize: 12, color: "#111827" },
+  badgeText: { fontSize: 12, color: "#123456" },
 });
