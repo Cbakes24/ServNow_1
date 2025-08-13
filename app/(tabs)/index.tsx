@@ -1,127 +1,488 @@
-import { Link } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useMemo, useState } from "react";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TextInput,
+  FlatList,
+  Pressable,
+  Image,
+  Alert,
+} from "react-native";
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-export default function CustomerHome() {
+/* ---------------- mock data ---------------- */
+
+const categories = [
+  { id: "cat1", name: "Landscaping", icon: <MaterialCommunityIcons name="shovel" size={18} /> },
+  { id: "cat2", name: "Electrical", icon: <MaterialCommunityIcons name="lightning-bolt" size={18} /> },
+  { id: "cat3", name: "HVAC", icon: <MaterialCommunityIcons name="air-filter" size={18} /> },
+  { id: "cat4", name: "Cleaning", icon: <MaterialIcons name="cleaning-services" size={18} /> },
+  { id: "cat5", name: "Handyman", icon: <MaterialCommunityIcons name="toolbox" size={18} /> },
+  { id: "cat6", name: "Plumbing", icon: <MaterialCommunityIcons name="pipe" size={18} /> },
+];
+
+const popularNearYou = [
+  {
+    id: "p1",
+    title: "Interior Painting",
+    price: 450,
+    rating: 4.8,
+    reviews: 132,
+    distance: "2.1 mi",
+    tag: "Instant Book",
+  },
+  {
+    id: "p2",
+    title: "Handyman (2 hrs)",
+    price: 95,
+    rating: 4.9,
+    reviews: 88,
+    distance: "1.5 mi",
+    tag: "Today",
+  },
+  {
+    id: "p3",
+    title: "Yard Cleanup",
+    price: 180,
+    rating: 4.7,
+    reviews: 64,
+    distance: "0.9 mi",
+    tag: "Popular",
+  },
+];
+
+const upcoming = [
+  {
+    id: "u1",
+    service: "House Cleaning",
+    date: "Tomorrow, 9:00 AM",
+    area: "Belltown",
+    pro: "Sarah J.",
+    status: "Confirmed",
+  },
+];
+
+/* ---------------- screen ---------------- */
+
+export default function CustomerHomeScreen() {
+  const [query, setQuery] = useState("");
+  const me = useMemo(
+    () => ({ name: "Cory", city: "Seattle", address: "1230 Beach Ave" }),
+    []
+  );
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome to ServNow</Text>
-        <Text style={styles.subtitle}>Book a Service</Text>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Quick Actions</Text>
-          <Text style={styles.cardText}>• Schedule a new service</Text>
-          <Text style={styles.cardText}>• View your appointments</Text>
-          <Text style={styles.cardText}>• Track service status</Text>
+    <SafeAreaView style={s.safe}>
+      <ScrollView contentContainerStyle={s.container}>
+        {/* Header */}
+        <View style={s.headerRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={s.hi}>Good afternoon, {me.name}!</Text>
+            <View style={s.inline}>
+              <Ionicons name="location-outline" size={16} color="#6b7280" />
+              <Text style={s.muted}>Near {me.city}</Text>
+            </View>
+          </View>
+
+          {/* tiny profile pic */}
+          <Image
+            source={require("../../assets/images/profilePicLeon.jpg")}
+            style={s.avatar}
+          />
         </View>
 
-        {/* Navigation to Contractor Views */}
-        <View style={styles.navigationCard}>
-          <Text style={styles.navigationTitle}>Switch to Contractor View</Text>
-          <View style={styles.navigationButtons}>
-            <Link href="/(contractor)" asChild>
-              <TouchableOpacity style={styles.navButton}>
-                <Text style={styles.navButtonText}>Contractor Home</Text>
-              </TouchableOpacity>
-            </Link>
-            <Link href="/(contractor)/jobs" asChild>
-              <TouchableOpacity style={styles.navButton}>
-                <Text style={styles.navButtonText}>Jobs</Text>
-              </TouchableOpacity>
-            </Link>
-          </View>
+        {/* Address pill */}
+        <Pressable style={s.addrPill} onPress={() => Alert.alert("Change address")}>
+          <Ionicons name="home-outline" size={16} color="#111827" />
+          <Text style={s.addrText} numberOfLines={1}>{me.address}</Text>
+          <Ionicons name="chevron-forward" size={16} color="#6b7280" />
+        </Pressable>
+
+        {/* Search bar */}
+        <View style={s.searchBox}>
+          <Ionicons name="search" size={18} color="#6b7280" />
+          <TextInput
+            placeholder="What do you need done?"
+            placeholderTextColor="#9ca3af"
+            value={query}
+            onChangeText={setQuery}
+            style={s.searchInput}
+            returnKeyType="search"
+            onSubmitEditing={() => Alert.alert("Search", query || "All services")}
+          />
+          <Pressable hitSlop={8} onPress={() => Alert.alert("Filters")}>
+            <Ionicons name="options-outline" size={20} color="#111827" />
+          </Pressable>
         </View>
-      </View>
+
+        {/* Quick actions */}
+        <View style={s.qaRow}>
+          <QuickAction
+            icon={<Ionicons name="flash" size={20} />}
+            title="Instant Book"
+            onPress={() => Alert.alert("Instant Book")}
+          />
+          <QuickAction
+            icon={<Ionicons name="calendar-outline" size={20} />}
+            title="Schedule"
+            onPress={() => Alert.alert("Schedule")}
+          />
+          <QuickAction
+            icon={<Ionicons name="chatbubbles-outline" size={20} />}
+            title="Messages"
+            onPress={() => Alert.alert("Messages")}
+          />
+        </View>
+
+        {/* Categories */}
+        <SectionTitle title="Popular Categories" rightText="See All" onRightPress={() => Alert.alert("All categories")} />
+        <FlatList
+          data={categories}
+          keyExtractor={(c) => c.id}
+          renderItem={({ item }) => (
+            <CategoryChip
+              label={item.name}
+              icon={item.icon}
+              onPress={() => Alert.alert("Category", item.name)}
+            />
+          )}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 10 }}
+          style={{ marginBottom: 4 }}
+        />
+
+        {/* Popular near you */}
+        <SectionTitle title="Popular Near You" />
+        <View style={{ gap: 12 }}>
+          {popularNearYou.map((p) => (
+            <ProCard
+              key={p.id}
+              title={p.title}
+              price={p.price}
+              rating={p.rating}
+              reviews={p.reviews}
+              distance={p.distance}
+              tag={p.tag}
+              onPress={() => Alert.alert("Details", p.title)}
+              onBook={() => Alert.alert("Continue", `Book ${p.title}`)}
+            />
+          ))}
+        </View>
+
+        {/* Upcoming */}
+        <SectionTitle title="Upcoming" />
+        <View style={{ gap: 10 }}>
+          {upcoming.map((u) => (
+            <UpcomingJob key={u.id} item={u} />
+          ))}
+        </View>
+
+        {/* Footer CTA */}
+        <View style={s.footerCta}>
+          <PrimaryButton title="Start a Request" onPress={() => Alert.alert("New request")} />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
+/* ---------------- components ---------------- */
+
+function SectionTitle({
+  title,
+  rightText,
+  onRightPress,
+}: {
+  title: string;
+  rightText?: string;
+  onRightPress?: () => void;
+}) {
+  return (
+    <View style={s.sectionRow}>
+      <Text style={s.sectionTitle}>{title}</Text>
+      {rightText ? (
+        <Pressable hitSlop={8} onPress={onRightPress}>
+          <Text style={s.link}>{rightText}</Text>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+function QuickAction({
+  icon,
+  title,
+  onPress,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable onPress={onPress} style={s.qaItem}>
+      <View style={s.qaIcon}>{icon}</View>
+      <Text style={s.qaText}>{title}</Text>
+    </Pressable>
+  );
+}
+
+function CategoryChip({
+  label,
+  icon,
+  onPress,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable onPress={onPress} style={s.chip}>
+      <View style={{ marginRight: 6 }}>{icon}</View>
+      <Text style={s.chipText}>{label}</Text>
+    </Pressable>
+  );
+}
+
+function ProCard({
+  title,
+  price,
+  rating,
+  reviews,
+  distance,
+  tag,
+  onPress,
+  onBook,
+}: {
+  title: string;
+  price: number;
+  rating: number;
+  reviews: number;
+  distance: string;
+  tag?: string;
+  onPress: () => void;
+  onBook: () => void;
+}) {
+  return (
+    <Pressable onPress={onPress} style={s.card}>
+      <View style={s.cardTopRow}>
+        <View style={{ flex: 1 }}>
+          <Text style={s.cardTitle}>{title}</Text>
+          <View style={s.inline}>
+            <Ionicons name="star" size={14} color="#f59e0b" />
+            <Text style={s.meta}>
+              {rating.toFixed(1)} • {reviews} reviews • {distance}
+            </Text>
+          </View>
+        </View>
+        <Text style={s.price}>${price.toFixed(2)}</Text>
+      </View>
+
+      {tag ? (
+        <View style={s.badge}>
+          <Text style={s.badgeText}>{tag}</Text>
+        </View>
+      ) : null}
+
+      <View style={s.ctaRow}>
+        <Button variant="ghost" title="Details" onPress={onPress} />
+        <Button title="Book" onPress={onBook} />
+      </View>
+    </Pressable>
+  );
+}
+
+function UpcomingJob({
+  item,
+}: {
+  item: { service: string; date: string; area: string; pro: string; status: string };
+}) {
+  return (
+    <View style={s.card}>
+      <View style={s.cardTopRow}>
+        <View>
+          <Text style={s.cardTitle}>{item.service}</Text>
+          <View style={s.inline}>
+            <Ionicons name="time-outline" size={16} color="#6b7280" />
+            <Text style={s.meta}>{item.date}</Text>
+          </View>
+          <View style={s.inline}>
+            <Ionicons name="location-outline" size={16} color="#6b7280" />
+            <Text style={s.meta}>{item.area}</Text>
+          </View>
+        </View>
+        <View style={{ alignItems: "flex-end" }}>
+          <View style={s.statusChip}>
+            <Ionicons name="checkmark-circle" size={14} color="#16a34a" />
+            <Text style={s.statusText}>{item.status}</Text>
+          </View>
+          <Text style={[s.mutedSmall, { marginTop: 6 }]}>with {item.pro}</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function Button({
+  title,
+  onPress,
+  variant = "primary",
+}: {
+  title: string;
+  onPress: () => void;
+  variant?: "primary" | "ghost";
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[s.btn, variant === "ghost" && s.btnGhost]}
+    >
+      <Text style={[s.btnText, variant === "ghost" && { color: "#111827" }]}>
+        {title}
+      </Text>
+    </Pressable>
+  );
+}
+
+function PrimaryButton({ title, onPress }: { title: string; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} style={s.primaryBtn}>
+      <Text style={s.primaryBtnText}>{title}</Text>
+    </Pressable>
+  );
+}
+
+/* ---------------- styles ---------------- */
+
+const s = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: "#f8fafc" },
+  container: { padding: 16, gap: 18 },
+
+  headerRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+  hi: { fontSize: 22, fontWeight: "700", color: "#111827", marginBottom: 4 },
+  inline: { flexDirection: "row", alignItems: "center", gap: 6 },
+  muted: { color: "#6b7280", fontSize: 14 },
+  mutedSmall: { color: "#9ca3af", fontSize: 12 },
+
+  avatar: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: "#e5e7eb" },
+
+  addrPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    alignSelf: "flex-start",
+    backgroundColor: "#fff",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
   },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-    color: '#123456',
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#123456',
-    marginBottom: 40,
-    textAlign: 'center',
-  },
-  card: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-    width: '100%',
-    maxWidth: 300,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
-    color: '#123456',
-  },
-  cardText: {
-    fontSize: 14,
-    color: '#123456',
-    marginBottom: 4,
-  },
-  navigationCard: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-    width: '100%',
-    maxWidth: 300,
-    marginTop: 20,
-  },
-  navigationTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
-    textAlign: 'center',
-    color: '#123456',
-  },
-  navigationButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  navButton: {
-    backgroundColor: '#B9FF66',
+  addrText: { color: "#111827", maxWidth: 220 },
+
+  searchBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    paddingHorizontal: 12,
     paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
   },
-  navButtonText: {
-    color: '#191A23',
-    fontSize: 16,
-    fontWeight: 'bold',
+  searchInput: { flex: 1, paddingVertical: 0, color: "#111827" },
+
+  qaRow: { flexDirection: "row", gap: 12 },
+  qaItem: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    alignItems: "center",
+    gap: 8,
   },
+  qaIcon: { backgroundColor: "#eef2ff", padding: 8, borderRadius: 10 },
+  qaText: { fontWeight: "600", color: "#111827" },
+
+  sectionRow: {
+    marginTop: 6,
+    marginBottom: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  sectionTitle: { fontSize: 18, fontWeight: "700", color: "#111827" },
+  link: { color: "#6366f1", fontWeight: "600" },
+
+  chip: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: "#fff",
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+  },
+  chipText: { color: "#111827", fontWeight: "600" },
+
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+  },
+  cardTopRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
+  cardTitle: { fontSize: 16, fontWeight: "700", color: "#111827" },
+  price: { color: "#16a34a", fontSize: 18, fontWeight: "800" },
+
+  badge: {
+    alignSelf: "flex-start",
+    backgroundColor: "#eef2ff",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+    marginTop: 8,
+  },
+  badgeText: { color: "#3730a3", fontWeight: "600", fontSize: 12 },
+
+  meta: { color: "#6b7280" },
+
+  statusChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "#dcfce7",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+  },
+  statusText: { color: "#166534", fontWeight: "600", fontSize: 12 },
+
+  ctaRow: { flexDirection: "row", gap: 10, marginTop: 12 },
+  btn: {
+    flex: 1,
+    backgroundColor: "#2563eb",
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  btnGhost: { backgroundColor: "#fff", borderWidth: 1, borderColor: "#e5e7eb" },
+  btnText: { color: "#fff", fontWeight: "700" },
+
+  footerCta: { marginTop: 14 },
+  primaryBtn: {
+    backgroundColor: "#111827",
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: "center",
+  },
+  primaryBtnText: { color: "white", fontWeight: "800" },
 });

@@ -14,6 +14,7 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
+    Switch,
     Text,
     View,
 } from "react-native";
@@ -101,6 +102,7 @@ const mapMarkers = [
 
 export default function ContractorHomeScreen() {
   const [isExpanded, setExpanded] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   const weekly = useMemo(
     () => ({
@@ -110,9 +112,9 @@ export default function ContractorHomeScreen() {
       responseMins: 2,
       name: "Mike",
       city: "Seattle",
-      isOnline: true,
+      isOnline: isOnline,
     }),
-    []
+    [isOnline]
   );
 
   return (
@@ -142,6 +144,13 @@ export default function ContractorHomeScreen() {
             >
               {weekly.isOnline ? "Online" : "Offline"}
             </Text>
+            <Switch
+              value={weekly.isOnline}
+              onValueChange={(value) => setIsOnline(value)}
+              trackColor={{ false: "#d1d5db", true: "#16a34a" }}
+              thumbColor={weekly.isOnline ? "#ffffff" : "#ffffff"}
+              style={{ marginLeft: 8 }}
+            />
           </View>
         </View>
         <View style={{ alignItems: "center", marginTop: 8 }}>
