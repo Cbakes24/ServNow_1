@@ -1,25 +1,32 @@
-import React, { useMemo } from "react";
 import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-  Pressable,
-  Linking,
-  Alert,
+    Ionicons,
+    MaterialCommunityIcons,
+    MaterialIcons,
+} from "@expo/vector-icons";
+import React, { useMemo, useState } from "react";
+import {
+    Alert,
+    FlatList,
+    Image,
+    ImageBackground,
+    Linking,
+    Pressable,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
 } from "react-native";
-import { Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
+/* ---------- types ---------- */
 type Job = {
   id: string;
   customer: string;
   category: string;
   price: number;
   status: "confirmed" | "pending";
-  start: string; // ISO or human string
-  end: string;   // ISO or human string
+  start: string;
+  end: string;
   area: string;
   distanceMiles: number;
 };
@@ -35,6 +42,7 @@ type NearbyJob = {
   postedAgo: string;
 };
 
+/* ---------- mock data (from the new ZIP layout) ---------- */
 const todaysJobs: Job[] = [
   {
     id: "1",
@@ -83,7 +91,17 @@ const nearbyJobs: NearbyJob[] = [
   },
 ];
 
+/* markers for the mini-map */
+const mapMarkers = [
+  { id: "m1", label: "Cleaning • $120 • 0.8 mi", top: "18%", left: "22%" },
+  { id: "m2", label: "Landscaping • $280 • 1.2 mi", top: "55%", left: "30%" },
+  { id: "m3", label: "Paint • $450 • 2.1 mi", top: "70%", left: "15%" },
+  { id: "m4", label: "Handyman • $95 • 1.5 mi", top: "40%", left: "65%" },
+];
+
 export default function ContractorHomeScreen() {
+  const [isExpanded, setExpanded] = useState(false);
+
   const weekly = useMemo(
     () => ({
       jobs: 8,
@@ -92,6 +110,7 @@ export default function ContractorHomeScreen() {
       responseMins: 2,
       name: "Mike",
       city: "Seattle",
+      isOnline: true,
     }),
     []
   );
@@ -109,21 +128,72 @@ export default function ContractorHomeScreen() {
             </View>
           </View>
           <View style={styles.inline}>
-            <View style={styles.dotOnline} />
-            <Text style={[styles.muted, { color: "#16a34a" }]}>Online</Text>
+            <View
+              style={[
+                styles.dot,
+                { backgroundColor: weekly.isOnline ? "#16a34a" : "#9ca3af" },
+              ]}
+            />
+            <Text
+              style={[
+                styles.muted,
+                { color: weekly.isOnline ? "#16a34a" : "#6b7280" },
+              ]}
+            >
+              {weekly.isOnline ? "Online" : "Offline"}
+            </Text>
           </View>
         </View>
-
-        {/* Stats */}
+        <View style={{ alignItems: "center", marginTop: 8 }}>
+          <Image
+            source={require("../../assets/images/profilePicLeon.jpg")} // replace with your URL
+            style={{ width: 64, height: 64, borderRadius: 32 }}
+          />
+          <Text style={{ marginTop: 6, fontSize: 16, fontWeight: "600" }}>
+            {weekly.name}
+          </Text>
+        </View>
+        {/* Weekly stats */}
         <View style={styles.statsRow}>
-          <StatPill label="Jobs" value={String(weekly.jobs)} icon={<Ionicons name="briefcase-outline" size={18} />} />
-          <StatPill label="Week" value={`$${weekly.earnings}`} icon={<MaterialIcons name="attach-money" size={18} />} />
-          <StatPill label="Rating" value={weekly.rating.toFixed(1)} icon={<Ionicons name="star" size={18} />} />
-          <StatPill label="Response" value={`${weekly.responseMins} min`} icon={<Ionicons name="flash-outline" size={18} />} />
+          <StatPill
+            label="Jobs"
+            value={String(weekly.jobs)}
+            icon={<Ionicons name="briefcase-outline" size={18} />}
+          />
+          <StatPill
+            label="Week"
+            value={`$${weekly.earnings}`}
+            icon={<MaterialIcons name="attach-money" size={18} />}
+          />
+          <StatPill
+            label="Rating"
+            value={weekly.rating.toFixed(1)}
+            icon={<Ionicons name="star" size={18} />}
+          />
+          <StatPill
+            label="Response"
+            value={`${weekly.responseMins} min`}
+            icon={<Ionicons name="flash-outline" size={18} />}
+          />
         </View>
 
-        {/* Today’s Schedule */}
-        <SectionTitle title="Today's Schedule" rightText={`${todaysJobs.length} jobs`} />
+        {/* Map preview (new) */}
+        <View style={styles.sectionRow}>
+          <Text style={styles.sectionTitle}>Nearby Map</Text>
+          <Pressable hitSlop={8} onPress={() => setExpanded((v) => !v)}>
+            <Text style={styles.link}>
+              {isExpanded ? "Collapse" : "Expand"}
+            </Text>
+          </Pressable>
+        </View>
+
+        <MapPreview expanded={isExpanded} />
+
+        {/* Today’s schedule */}
+        <SectionTitle
+          title="Today's Schedule"
+          rightText={`${todaysJobs.length} jobs`}
+        />
         <View style={{ gap: 12 }}>
           {todaysJobs.map((j) => (
             <JobCard
@@ -135,25 +205,27 @@ export default function ContractorHomeScreen() {
           ))}
         </View>
 
-        {/* Nearby */}
-        <SectionTitle title="Available Jobs Near You" rightText="See All" onRightPress={() => Alert.alert("See All")} />
-        <View style={{ gap: 12 }}>
-          <FlatList
-            data={nearbyJobs}
-            keyExtractor={(i) => i.id}
-            renderItem={({ item }) => (
-              <NearbyJobCard
-                job={item}
-                onAccept={() => Alert.alert("Accepted", item.title)}
-                onDetails={() => Alert.alert("Details", item.title)}
-              />
-            )}
-            scrollEnabled={false}
-            ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-          />
-        </View>
+        {/* Available near you */}
+        <SectionTitle
+          title="Available Jobs Near You"
+          rightText="See All"
+          onRightPress={() => Alert.alert("See All")}
+        />
+        <FlatList
+          data={nearbyJobs}
+          keyExtractor={(i) => i.id}
+          renderItem={({ item }) => (
+            <NearbyJobCard
+              job={item}
+              onAccept={() => Alert.alert("Accepted", item.title)}
+              onDetails={() => Alert.alert("Details", item.title)}
+            />
+          )}
+          scrollEnabled={false}
+          ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+        />
 
-        {/* Quick Links */}
+        {/* Quick tiles */}
         <View style={styles.quickRow}>
           <QuickTile
             title="View Analytics"
@@ -173,8 +245,57 @@ export default function ContractorHomeScreen() {
   );
 }
 
-/* ---------- components ---------- */
+/* ---------- Map preview ---------- */
+function MapPreview({ expanded }: { expanded: boolean }) {
+  // If you have a static map image, add it to your assets and import here.
+  // For now, we render a neutral background with positioned markers to match the Figma layout.
+  return (
+    <View
+      style={[
+        styles.mapWrap,
+        expanded ? styles.mapExpanded : styles.mapCollapsed,
+      ]}
+    >
+      {/* Replace ImageBackground source with your asset if you have one */}
+      <ImageBackground
+        source={undefined as any}
+        style={StyleSheet.absoluteFill}
+      />
+      {/* fake basemap tint */}
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: "#eef2ff" }]} />
 
+      {/* markers */}
+      {mapMarkers.map((m) => (
+        <View
+          key={m.id}
+          style={[styles.marker, { top: m.top as any, left: m.left as any }]}
+        >
+          <Ionicons name="location" size={18} color="#2563eb" />
+          <Text style={styles.markerText}>{m.label}</Text>
+        </View>
+      ))}
+
+      {/* footer controls */}
+      <View style={styles.mapFooter}>
+        <View style={styles.inline}>
+          <Ionicons name="people-outline" size={16} color="#6b7280" />
+          <Text style={styles.muted}>Jobs nearby</Text>
+        </View>
+        <Pressable
+          onPress={() => Alert.alert("Navigate", "Opening map…")}
+          hitSlop={8}
+        >
+          <View style={styles.inline}>
+            <Ionicons name="navigate-outline" size={16} color="#2563eb" />
+            <Text style={[styles.link, { marginLeft: 4 }]}>Open Maps</Text>
+          </View>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+/* ---------- UI bits ---------- */
 function SectionTitle({
   title,
   rightText,
@@ -244,8 +365,15 @@ function JobCard({
 
       <View style={styles.metaRow}>
         <Ionicons name="time-outline" size={16} color="#6b7280" />
-        <Text style={styles.meta}>{job.start} – {job.end}</Text>
-        <Ionicons name="location-outline" size={16} color="#6b7280" style={{ marginLeft: 12 }} />
+        <Text style={styles.meta}>
+          {job.start} – {job.end}
+        </Text>
+        <Ionicons
+          name="location-outline"
+          size={16}
+          color="#6b7280"
+          style={{ marginLeft: 12 }}
+        />
         <Text style={styles.meta}>
           {job.area} • {job.distanceMiles} miles
         </Text>
@@ -253,7 +381,7 @@ function JobCard({
 
       <View style={styles.ctaRow}>
         <Button variant="ghost" title="View Details" onPress={onDetails} />
-        <Button title="Navigate" onPress={onNavigate} />
+        <Button title="Navigate" onPress={() => openMaps(job.area)} />
       </View>
     </View>
   );
@@ -279,7 +407,9 @@ function NearbyJobCard({
           </View>
           <View style={styles.inline}>
             <Ionicons name="location-outline" size={16} color="#6b7280" />
-            <Text style={styles.meta}>{job.area} • {job.distanceMiles} miles</Text>
+            <Text style={styles.meta}>
+              {job.area} • {job.distanceMiles} miles
+            </Text>
           </View>
         </View>
         <Text style={styles.price}>${job.price.toFixed(2)}</Text>
@@ -340,10 +470,7 @@ function Button({
       ]}
     >
       <Text
-        style={[
-          styles.btnText,
-          variant === "ghost" && { color: "#111827" },
-        ]}
+        style={[styles.btnText, variant === "ghost" && { color: "#111827" }]}
       >
         {title}
       </Text>
@@ -352,7 +479,6 @@ function Button({
 }
 
 /* ---------- helpers ---------- */
-
 function openMaps(query: string) {
   const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     query
@@ -361,17 +487,21 @@ function openMaps(query: string) {
 }
 
 /* ---------- styles ---------- */
-
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#f8fafc" },
   container: { padding: 16, gap: 18 },
   headerRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   hi: { fontSize: 22, fontWeight: "700", color: "#111827", marginBottom: 4 },
   inline: { flexDirection: "row", alignItems: "center", gap: 6 },
-  inlineSpace: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 8 },
+  inlineSpace: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 8,
+  },
   muted: { color: "#6b7280", fontSize: 14 },
   mutedSmall: { color: "#9ca3af", fontSize: 12 },
-  dotOnline: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#16a34a", marginRight: 6 },
+  dot: { width: 8, height: 8, borderRadius: 4, marginRight: 6 },
   statsRow: { flexDirection: "row", gap: 10 },
   statPill: {
     flex: 1,
@@ -386,9 +516,56 @@ const styles = StyleSheet.create({
   },
   statValue: { fontWeight: "700", color: "#111827" },
   statLabel: { fontSize: 12, color: "#6b7280" },
-  sectionRow: { marginTop: 6, marginBottom: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  sectionRow: {
+    marginTop: 6,
+    marginBottom: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   sectionTitle: { fontSize: 18, fontWeight: "700", color: "#111827" },
   link: { color: "#6366f1", fontWeight: "600" },
+
+  /* map */
+  mapWrap: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    overflow: "hidden",
+  },
+  mapCollapsed: { height: 160 },
+  mapExpanded: { height: 300 },
+  marker: {
+    position: "absolute",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 999,
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+  },
+  markerText: { color: "#111827", fontSize: 12, fontWeight: "600" },
+  mapFooter: {
+    position: "absolute",
+    bottom: 8,
+    left: 8,
+    right: 8,
+    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.95)",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+  },
+
+  /* cards */
   card: {
     backgroundColor: "#fff",
     borderRadius: 16,
@@ -396,7 +573,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#e5e7eb",
   },
-  cardTopRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
+  cardTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
   cardTitle: { fontSize: 16, fontWeight: "700", color: "#111827" },
   cardSub: { color: "#6b7280", marginTop: 2 },
   price: { color: "#16a34a", fontSize: 18, fontWeight: "800" },
@@ -412,7 +593,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#dcfce7",
   },
   badgeText: { color: "#166534", fontWeight: "600", fontSize: 12 },
-  metaRow: { flexDirection: "row", alignItems: "center", marginTop: 4, gap: 6, flexWrap: "wrap" },
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+    gap: 6,
+    flexWrap: "wrap",
+  },
   meta: { color: "#6b7280" },
   ctaRow: { flexDirection: "row", gap: 10, marginTop: 12 },
   btn: {
@@ -425,6 +612,8 @@ const styles = StyleSheet.create({
   btnSuccess: { backgroundColor: "#16a34a" },
   btnGhost: { backgroundColor: "#fff", borderWidth: 1, borderColor: "#e5e7eb" },
   btnText: { color: "#fff", fontWeight: "700" },
+
+  /* quick tiles */
   quickRow: { flexDirection: "row", gap: 12, marginTop: 12 },
   quickTile: {
     flex: 1,
