@@ -52,6 +52,13 @@ export default function ContractorTabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="dollarsign.circle.fill" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="proScreen"
+        options={{
+          title: 'Pro Screen',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
+        }}
+      />
     </Tabs>
   );
 } 
