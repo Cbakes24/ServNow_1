@@ -1,17 +1,16 @@
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import React, { useMemo, useState } from "react";
 import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  FlatList,
-  Pressable,
-  Image,
   Alert,
+  Image,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
 } from "react-native";
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 /* ---------------- mock data ---------------- */
 
@@ -118,6 +117,11 @@ export default function CustomerHomeScreen() {
           </Pressable>
         </View>
 
+        {/* Start a Request CTA - moved to top */}
+        <View style={s.startRequestCta}>
+          <PrimaryButton title="Start a Request" onPress={() => Alert.alert("New request")} />
+        </View>
+
         {/* Quick actions */}
         <View style={s.qaRow}>
           <QuickAction
@@ -139,21 +143,16 @@ export default function CustomerHomeScreen() {
 
         {/* Categories */}
         <SectionTitle title="Popular Categories" rightText="See All" onRightPress={() => Alert.alert("All categories")} />
-        <FlatList
-          data={categories}
-          keyExtractor={(c) => c.id}
-          renderItem={({ item }) => (
-            <CategoryChip
-              label={item.name}
-              icon={item.icon}
-              onPress={() => Alert.alert("Category", item.name)}
+        <View style={s.categoriesGrid}>
+          {categories.map((c) => (
+            <CategoryCard
+              key={c.id}
+              label={c.name}
+              icon={c.icon}
+              onPress={() => Alert.alert("Category", c.name)}
             />
-          )}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 10 }}
-          style={{ marginBottom: 4 }}
-        />
+          ))}
+        </View>
 
         {/* Popular near you */}
         <SectionTitle title="Popular Near You" />
@@ -179,11 +178,6 @@ export default function CustomerHomeScreen() {
           {upcoming.map((u) => (
             <UpcomingJob key={u.id} item={u} />
           ))}
-        </View>
-
-        {/* Footer CTA */}
-        <View style={s.footerCta}>
-          <PrimaryButton title="Start a Request" onPress={() => Alert.alert("New request")} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -230,7 +224,7 @@ function QuickAction({
   );
 }
 
-function CategoryChip({
+function CategoryCard({
   label,
   icon,
   onPress,
@@ -240,9 +234,9 @@ function CategoryChip({
   onPress: () => void;
 }) {
   return (
-    <Pressable onPress={onPress} style={s.chip}>
-      <View style={{ marginRight: 6 }}>{icon}</View>
-      <Text style={s.chipText}>{label}</Text>
+    <Pressable onPress={onPress} style={s.categoryCard}>
+      <View style={s.categoryIcon}>{icon}</View>
+      <Text style={s.categoryText}>{label}</Text>
     </Pressable>
   );
 }
@@ -396,6 +390,11 @@ const s = StyleSheet.create({
   },
   searchInput: { flex: 1, paddingVertical: 0, color: "#111827" },
 
+  startRequestCta: {
+    marginTop: 14,
+    marginBottom: 14,
+  },
+
   qaRow: { flexDirection: "row", gap: 12 },
   qaItem: {
     flex: 1,
@@ -485,4 +484,34 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   primaryBtnText: { color: "white", fontWeight: "800" },
+
+  categoriesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  categoryCard: {
+    width: "48%", // Adjust as needed for grid layout
+    aspectRatio: 1.2, // Make cards taller than wide
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  categoryIcon: {
+    backgroundColor: "#eef2ff",
+    padding: 12,
+    borderRadius: 16,
+  },
+  categoryText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#111827",
+    textAlign: "center",
+  },
 });
