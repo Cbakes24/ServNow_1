@@ -1,4 +1,5 @@
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 import React, { useMemo, useState } from "react";
 import {
   Alert,
@@ -68,6 +69,7 @@ const upcoming = [
 
 export default function CustomerHomeScreen() {
   const [query, setQuery] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
   const me = useMemo(
     () => ({ name: "Cory", city: "Seattle", address: "1230 Beach Ave" }),
     []
@@ -86,12 +88,45 @@ export default function CustomerHomeScreen() {
             </View>
           </View>
 
-          {/* tiny profile pic */}
-          <Image
-            source={require("../../assets/images/profilePicLeon.jpg")}
-            style={s.avatar}
-          />
+          {/* Profile picture with dropdown */}
+          <Pressable onPress={() => setShowDropdown(!showDropdown)} style={s.profileContainer}>
+            <Image
+              source={require("../../assets/images/profilePicLeon.jpg")}
+              style={s.avatar}
+            />
+            <Ionicons name="chevron-down" size={16} color="#6b7280" style={s.dropdownIcon} />
+            
+            {/* Dropdown Menu */}
+            {showDropdown && (
+              <View style={s.dropdownMenu}>
+                <Link href="/(contractor)" asChild>
+                  <Pressable style={s.dropdownItem} onPress={() => setShowDropdown(false)}>
+                    <Ionicons name="briefcase-outline" size={18} color="#6b7280" />
+                    <Text style={s.dropdownText}>Switch to Contractor</Text>
+                  </Pressable>
+                </Link>
+                <Link href="/(tabs)/explore" asChild>
+                  <Pressable style={s.dropdownItem} onPress={() => setShowDropdown(false)}>
+                    <Ionicons name="list-outline" size={18} color="#6b7280" />
+                    <Text style={s.dropdownText}>View Jobs</Text>
+                  </Pressable>
+                </Link>
+                <Pressable style={s.dropdownItem} onPress={() => setShowDropdown(false)}>
+                  <Ionicons name="settings-outline" size={18} color="#6b7280" />
+                  <Text style={s.dropdownText}>Settings</Text>
+                </Pressable>
+              </View>
+            )}
+          </Pressable>
         </View>
+
+        {/* Backdrop to close dropdown */}
+        {showDropdown && (
+          <Pressable 
+            style={s.backdrop} 
+            onPress={() => setShowDropdown(false)} 
+          />
+        )}
 
         {/* Address pill */}
         <Pressable style={s.addrPill} onPress={() => Alert.alert("Change address")}>
@@ -353,7 +388,7 @@ function PrimaryButton({ title, onPress }: { title: string; onPress: () => void 
 
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#f8fafc" },
-  container: { padding: 16, gap: 18 },
+  container: { padding: 16, gap: 18, zIndex: 1 },
 
   headerRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   hi: { fontSize: 22, fontWeight: "700", color: "#111827", marginBottom: 4 },
@@ -362,6 +397,53 @@ const s = StyleSheet.create({
   mutedSmall: { color: "#9ca3af", fontSize: 12 },
 
   avatar: { width: 40, height: 40, borderRadius: 20, borderWidth: 1, borderColor: "#e5e7eb" },
+  profileContainer: {
+    position: "relative",
+    zIndex: 9999, // Very high z-index to appear above everything
+  },
+  dropdownIcon: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+  },
+  dropdownMenu: {
+    position: "absolute",
+    top: 50, // Position below the profile container
+    right: 0,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 10, // Higher elevation for Android
+    zIndex: 9999, // Very high z-index to appear above everything
+    minWidth: 180, // Ensure dropdown has proper width
+  },
+  dropdownItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    gap: 10,
+  },
+  dropdownText: {
+    color: "#111827",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+
+  backdrop: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.3)", // Lighter overlay
+    zIndex: 9998, // High but below dropdown
+  },
 
   addrPill: {
     flexDirection: "row",
@@ -437,6 +519,7 @@ const s = StyleSheet.create({
     padding: 14,
     borderWidth: 1,
     borderColor: "#e5e7eb",
+    zIndex: 1,
   },
   cardTopRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
   cardTitle: { fontSize: 16, fontWeight: "700", color: "#111827" },
@@ -502,6 +585,7 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
+    zIndex: 1,
   },
   categoryIcon: {
     backgroundColor: "#eef2ff",
